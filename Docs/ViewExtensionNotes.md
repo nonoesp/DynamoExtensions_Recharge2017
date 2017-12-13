@@ -31,3 +31,47 @@ DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExten
 
 3) Extend the IViewExtension class </br>
     ```public class RechargeViewExtension : IViewExtension```
+
+4) `IViewExtension` required implementations that must be included
+    - `IViewExtension.Startup()`
+    - `IViewExtension.Loaded()`
+    - `IViewExtension.Shutdown()`
+    - `IViewExtension.UniqueId`
+    - `IViewExtension.Name`
+    - `IDisposable.Dispose()`
+
+    At this point your class should look something like this...
+
+    ```
+    namespace RechargeViewExtension
+    {
+        public class RechargeViewExtension : IViewExtension
+        {
+            public void Dispose() { }
+
+            public void Startup(ViewStartupParams p) { }
+
+            public void Loaded(ViewLoadedParams p) { }
+
+            public void Shutdown() { }
+
+            public string UniqueId
+            {
+                get
+                {
+                    return Guid.NewGuid().ToString();
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return "Recharge View Extension";
+                }
+            }
+
+        }
+    }
+    ```
+
