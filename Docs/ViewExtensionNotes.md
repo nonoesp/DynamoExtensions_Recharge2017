@@ -115,5 +115,5 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
     (Note: to add an `xaml` file in VS simply create a new text file specifying the extension)
     
     In this basic file you will notice some very basic properties defined regarding the aesthetic of our window.  It should like similar to this... </br>
-    
-    ![image](../Images/XamlWindow.jpg)
+
+    ![Example Window](../Images/XamlWindow.JPG)
