@@ -90,7 +90,9 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
 
     The next step is to define what type of user interface we want to create. For this first example we are going to keep it very simple and implement a new pop-up window that can be launched from the Dynamo menu.  There are 3 steps to this section but we will start by defining the appearance of the window in an `xaml` file.  If you are new to `xaml` it is an XML-based markup language developed by Microsoft.  There is a ton of documentation online and it is very common when working with Wpf.
 
-    There are multiple ways to develop a design using `xaml`.  You can textually define the aesthetic/behavior, use a `xaml` designer for a more physical approach, or a combination of both.
+    There are multiple ways to develop a design using `xaml`.  You can textually define the aesthetic/behavior, use a `xaml` designer for a more physical approach, or a combination of both. </br>
+
+    `RechargeWindow.xaml`
 
     ```xaml
     <Window x:Class="RechargeViewExtension.SampleWindow"
@@ -109,5 +111,9 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
         </Grid>
     </Window>
     ```
-    
 
+    (Note: to add an `xaml` file in VS simply create a new text file specifying the extension)
+    
+    In this basic file you will notice some very basic properties defined regarding the aesthetic of our window.  It should like similar to this... </br>
+    
+    ![image](../Images/XamlWindow.jpg)

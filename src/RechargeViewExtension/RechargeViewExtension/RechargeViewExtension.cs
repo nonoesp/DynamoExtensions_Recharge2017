@@ -15,6 +15,11 @@ namespace RechargeViewExtension
     /// </summary>
     public class RechargeViewExtension : IViewExtension
     {
+        public static ViewLoadedParams parameters;
+        public static Window dynamoWindow;
+        //public static HelixWatch3DViewModel viewModel;
+        //public static CameraData cameraData;
+
         public void Dispose() { }
 
         public void Startup(ViewStartupParams p) { }

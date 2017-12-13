@@ -1,0 +1,4 @@
+﻿<ViewExtensionDefinition>
+  <AssemblyPath>..\RechargeViewExtension.dll</AssemblyPath>
+  <TypeName>RechargeViewExtension.RechargeViewExtension</TypeName>
+</ViewExtensionDefinition>
