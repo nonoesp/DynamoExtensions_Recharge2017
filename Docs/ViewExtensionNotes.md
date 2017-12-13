@@ -42,7 +42,7 @@ DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExten
 
     At this point your class should look something like this...
 
-    ```
+    ```C#
     namespace RechargeViewExtension
     {
         public class RechargeViewExtension : IViewExtension
@@ -74,4 +74,40 @@ DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExten
         }
     }
     ```
+
+5) Define a `ViewExtensionDefinition.xml` </br>
+Let's add an `xml` file that defines our viewExtension to the project.  This should include a reference to our assembly and the type name we defined in our class. So something like this... </br>
+
+    `RechargeViewExtension_ViewExtensionDefinition.xml`
+    ```xml
+    <ViewExtensionDefinition>
+        <AssemblyPath>..\RechargeViewExtension.dll</AssemblyPath>
+        <TypeName>RechargeViewExtension.RechargeViewExtension</TypeName>
+    </ViewExtensionDefinition>
+    ```
+
+6) Define a pop-up window
+
+    The next step is to define what type of user interface we want to create. For this first example we are going to keep it very simple and implement a new pop-up window that can be launched from the Dynamo menu.  There are 3 steps to this section but we will start by defining the appearance of the window in an `xaml` file.  If you are new to `xaml` it is an XML-based markup language developed by Microsoft.  There is a ton of documentation online and it is very common when working with Wpf.
+
+    There are multiple ways to develop a design using `xaml`.  You can textually define the aesthetic/behavior, use a `xaml` designer for a more physical approach, or a combination of both.
+
+    ```xaml
+    <Window x:Class="RechargeViewExtension.SampleWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RechargeViewExtension"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+            Width="500" Height="100">
+        <Grid Name="MainGrid" 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+                <TextBlock HorizontalAlignment="Stretch" Text="{Binding SelectedNodesText}" FontWeight="Bold" FontSize="24"/>
+        </Grid>
+    </Window>
+    ```
+    
 
