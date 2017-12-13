@@ -132,6 +132,9 @@
   <ItemGroup>
     <Compile Include="RechargeViewExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RechargeWindow.xaml.cs">
+      <DependentUpon>RechargeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RechargeWindowViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

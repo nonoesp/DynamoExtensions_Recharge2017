@@ -122,9 +122,29 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
 
     ![Example Window](../Images/XamlWindow.JPG)
 
+    We also need to create a `C#` backing file for initializing our window. This can be accomplished by adding an additional text file named `RechargeWindow.xaml.cs`. Using this naming convention should automatically nest the `C#` file under our `xaml` file. Add the following code to this new file...
+
+    ```C#
+    using System.Windows;
+
+    namespace RechargeViewExtension
+    {
+        /// <summary>
+        /// Interaction logic for RechargeWindow.xaml
+        /// </summary>
+        public partial class RechargeWindow : Window
+        {
+            public RechargeWindow()
+            {
+                InitializeComponent();
+            }
+        }
+    }
+    ```
+
 7) Define the window behavior
 
-    Now we will define how our window responds to various events in a new C# class file. This class will inherit from `NotificationObject` which will provide notifications from changes in Dynamo and `IDisposable`. You should also included the following assemblies: </br>
+    Now we will define how our window responds to various events in a new `C#` class file. This class will inherit from `NotificationObject` which will provide notifications from changes in Dynamo and `IDisposable`. You should also included the following assemblies: </br>
     - System
     - Dynamo.Core (these 3 should already be referenced in the project when we added the NuGet Pkg)
     - Dynamo.Extensions
