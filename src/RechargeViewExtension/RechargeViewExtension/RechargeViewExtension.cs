@@ -15,16 +15,46 @@ namespace RechargeViewExtension
     /// </summary>
     public class RechargeViewExtension : IViewExtension
     {
-        public static ViewLoadedParams parameters;
-        public static Window dynamoWindow;
-        //public static HelixWatch3DViewModel viewModel;
-        //public static CameraData cameraData;
+
+        // Create a variable for our menu item, this is how the
+        // user will launch the pop-up window within Dynamo
+        private MenuItem rechargeMenuItem;
 
         public void Dispose() { }
 
         public void Startup(ViewStartupParams p) { }
 
-        public void Loaded(ViewLoadedParams p) { }
+        public void Loaded(ViewLoadedParams p)
+        {
+            // Specify the text displayed on the menu item
+            rechargeMenuItem = new MenuItem { Header = "Show View Extension Recharge Window" };
+
+            // Define the behavior when menu item is clicked
+            rechargeMenuItem.Click += (sender, args) =>
+            {
+                // Instantiate a viewModel and window
+                var viewModel = new RechargeWindowViewModel(p);
+                var window = new RechargeWindow
+                {
+                    // Set the data context for the main grid in the window
+                    // This refers to the main grid also seen in our xaml file
+                    MainGrid = { DataContext = viewModel },
+
+                    // Set the owner of the window to the Dynamo window.
+                    Owner = p.DynamoWindow
+                };
+
+                // Set the window position
+                window.Left = window.Owner.Left + 400;
+                window.Top = window.Owner.Top + 200;
+
+                // Show a modeless window.
+                window.Show();
+            };
+
+            // add the menu item to our loaded parameters
+            p.AddMenuItem(MenuBarType.View, rechargeMenuItem);
+        }
 
         public void Shutdown() { }
 

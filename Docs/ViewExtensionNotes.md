@@ -22,8 +22,9 @@ DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExten
 
 This first example walks through each step required to create a viewExtenion similar to the one in DynamoSamples just to get more familiar with the various requirements.  The end goal is to have a simple pop-up window activated from the Dynamo menu toolbar that displays some information about the active graph.
 
-1) Create a new Visual Studio Class Library project
-    - This project will be called RechargeViewExtension
+1) Create a new Visual Studio Class Library project </br>
+
+    This project will be called `RechargeViewExtension`
 
 2) Include the following assemblies
     - `System`
@@ -158,6 +159,123 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
 
     In this file we are going to respond to various events in Dynamo and instruct the UI to update based on these events.  Again, this is just a template and we will begin roughing out the details in the next section.
 
+## Reacting to Dynamo Events
+
+In this section we are going to revist 2 of the main files we previously setup which were: </br>
+- `RechargeViewExtension.cs`
+- `RechargeWindowViewModel.cs`
+
+1) Defining viewExtension loading behavior
+
+    Jumping back into our main `RechargeViewExtension.cs` file to define what happens when the extension is loaded into Dynamo. I am going to be overly aggressive with comments to support various C# skill levels so bear with me :)
+
+    ```C#
+    public class RechargeViewExtension : IViewExtension
+    {
+        // Create a variable for our menu item, this is how the
+        // user will launch the pop-up window within Dynamo
+        private MenuItem rechargeMenuItem;
+
+        public void Dispose() { }
+
+        public void Startup(ViewStartupParams p) { }
+
+        public void Loaded(ViewLoadedParams p)
+        {
+            // Specify the text displayed on the menu item
+            rechargeMenuItem = new MenuItem {Header = "Show View Extension Recharge Window"};
+            
+            // Define the behavior when menu item is clicked
+            rechargeMenuItem.Click += (sender, args) =>
+            {
+                // Instantiate a viewModel and a window
+                var viewModel = new RechargeWindowViewModel(p);
+                var window = new RechargeWindow
+                {
+                    // Set the data context for the main grid in the window.
+                    // This refers to the main grid also seen in our xaml file
+                    MainGrid = { DataContext = viewModel },
+
+                    // Set the owner of the window to the Dynamo window.
+                    Owner = p.DynamoWindow
+                };
+
+                // Set the window position
+                window.Left = window.Owner.Left + 400;
+                window.Top = window.Owner.Top + 200;
+
+                // Show a modeless window.
+                window.Show();
+            };
+
+            // add the menu item to our loaded parameters
+            p.AddMenuItem(MenuBarType.View, rechargeMenuItem);
+        }
+
+        public void Shutdown() { }
+
+        public string UniqueId
+        {
+            get
+            {
+                return Guid.NewGuid().ToString();
+            }  
+        } 
+
+        public string Name
+        {
+            get
+            {
+                return "Recharge View Extension";
+            }
+        } 
+    }
+    ```
+
+2) Update Window UI
+
+    Here we will add the logic to respond to various events in Dynamo and instruct the UI to update based on these events. Begin by opening the `RechargeWindowViewModel.cs` file and making the following additions explained below...
+
+    ```C#
+    class RechargeWindowViewModel : NotificationObject, IDisposable
+    {
+        private string selectedNodesText = "Begin selecting ";
+
+        // Variable for storing a reference to our loaded parameters
+        private ReadyParams readyParams;
+
+        // Display the number of nodes in the active workspace
+        public string SelectedNodesText = @"There are {readyParams.CurrentWorkspaceModel.Nodes.Count()} nodes in the workspace.";
+
+        public RechargeWindowViewModel(ReadyParams p)
+        {
+            // Save a reference to our loaded parameters which
+            // is required in order to access the workspaces
+            readyParams = p;
+
+            // Subscribe to NodeAdded and NodeRemoved events
+            p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodesChanged;
+            p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodesChanged;
+        }
+
+        // Define what happens when the event above if triggered
+        private void CurrentWorkspaceModel_NodesChanged(NodeModel obj)
+        {
+            // Event used to notify UI or bound elements that
+            // the data has changed and needs to be updated
+            RaisePropertyChanged("SelectedNodesText");
+        }
+
+        // Very important - unsubscribe from our events to prevent a memory leak
+        public void Dispose()
+        {
+            readyParams.CurrentWorkspaceModel.NodeAdded -= CurrentWorkspaceModel_NodesChanged;
+            readyParams.CurrentWorkspaceModel.NodeRemoved -= CurrentWorkspaceModel_NodesChanged;
+        }
+    }
+    ```
+
+3) Testing the viewExtension in Dynamo
 
 
 
