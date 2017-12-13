@@ -132,6 +132,7 @@
   <ItemGroup>
     <Compile Include="RechargeViewExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RechargeWindowViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
