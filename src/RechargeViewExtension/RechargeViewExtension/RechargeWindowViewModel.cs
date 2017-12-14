@@ -13,7 +13,20 @@ namespace RechargeViewExtension
         private ReadyParams readyParams;
 
         // Display the number of nodes in the active workspace
-        public string SelectedNodesText = @"There are {readyParams.CurrentWorkspaceModel.Nodes.Count()} nodes in the workspace.";
+        public string SelectedNodesText => $"Active nodes:\n{getNodeTypes()}";
+
+        public string getNodeTypes()
+        {
+            string output = "";
+
+            foreach (NodeModel node in readyParams.CurrentWorkspaceModel.Nodes)
+            {
+                string nickName = node.NickName;
+                output += nickName + "\n";
+            }
+
+            return output;
+        }
 
         public RechargeWindowViewModel(ReadyParams p)
         {

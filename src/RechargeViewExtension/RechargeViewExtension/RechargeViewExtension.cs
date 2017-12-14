@@ -15,7 +15,6 @@ namespace RechargeViewExtension
     /// </summary>
     public class RechargeViewExtension : IViewExtension
     {
-
         // Create a variable for our menu item, this is how the
         // user will launch the pop-up window within Dynamo
         private MenuItem rechargeMenuItem;

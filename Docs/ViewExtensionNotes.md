@@ -1,6 +1,6 @@
 # Recharge 2017
 
-# Day 1
+# Building Your First Dynamo View Extension
 
 ## Background/Existing Resources
 
@@ -89,6 +89,7 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
         <TypeName>RechargeViewExtension.RechargeViewExtension</TypeName>
     </ViewExtensionDefinition>
     ```
+    (Note: `xml` file naming must end in `_ViewExtensionDefinition.xml`)
 
 6) Design a pop-up window
 
@@ -100,18 +101,18 @@ Let's add an `xml` file that defines our viewExtension to the project.  This sho
 
     ```xaml
     <Window x:Class="RechargeViewExtension.RechargeWindow"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RechargeViewExtension"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-            Width="500" Height="100">
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                xmlns:local="clr-namespace:RechargeViewExtension"
+                mc:Ignorable="d" 
+                d:DesignHeight="300" d:DesignWidth="300"
+                Width="500" Height="100">
         <Grid Name="MainGrid" 
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-                <TextBlock HorizontalAlignment="Stretch" Text="{Binding SelectedNodesText}" FontWeight="Bold" FontSize="24"/>
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <TextBlock HorizontalAlignment="Stretch" Text="{Binding SelectedNodesText}" FontFamily="Arial" Padding="10" FontWeight="Medium" FontSize="18" Background="#2d2d2d" Foreground="White" />
         </Grid>
     </Window>
     ```
@@ -264,8 +265,22 @@ In this section we are going to revist 2 of the main files we previously setup w
         // Variable for storing a reference to our loaded parameters
         private ReadyParams readyParams;
 
-        // Display the number of nodes in the active workspace
-        public string SelectedNodesText = @"There are {readyParams.CurrentWorkspaceModel.Nodes.Count()} nodes in the workspace.";
+        // Display the nickname of nodes in the active workspace
+        public string SelectedNodesText => $"Active nodes:\n{getNodeNicknames()}";
+
+        // Helper method that returns a string containing all the active nodes nicknames
+        public string getNodeNicknames()
+        {
+            string output = "";
+
+            foreach (NodeModel node in readyParams.CurrentWorkspaceModel.Nodes)
+            {
+                string nickName = node.NickName;
+                output += nickName + "\n";
+            }
+
+            return output;
+        }
 
         public RechargeWindowViewModel(ReadyParams p)
         {
@@ -295,7 +310,45 @@ In this section we are going to revist 2 of the main files we previously setup w
     }
     ```
 
-3) Testing the viewExtension in Dynamo
+    Our window should now be accessible in the `View` tab in Dynamo.  Once launched we will have some initial text and will populate/remove any nodes placed in the workspace triggered by the `NodeAdded` and `NodeRemoved` events.
+
+3) Build </br>
+
+    This part is easy...
+    - Select `Debug` or `Release` depending on your goal
+    - Navigate to `Build >> Build Solution`
+
+    Your local repo should now contain a bin folder containing a series of .dlls </br>
+    `..\DynamoExtensions_Recharge2017\src\RechargeViewExtension\RechargeViewExtension\bin`
+
+4) Load viewExtension in Dynamo
+
+    Loading a custom viewExtension is a bit more complicating than loading a package. For now we will manually place the required files in their respective locations. This process can be tedious when developing and can be automated using a post build step in Visual Studio.  We will take a look at that later. For now here is what has to happen...
+
+    - Copy `RechargeViewExtension_ViewExtensionDefinition.xml` located in </br>`\..\DynamoExtensions_Recharge2017\src\RechargeViewExtension\RechargeViewExtension` to </br>
+    `C:\Program Files\Dynamo\Dynamo Core\1.3\viewExtensions` or </br>
+    `C:\Program Files\Dynamo\Dynamo Revit\1.3\viewExtensions` </br>
+    (The first location is for Dynamo Studio and the second if for Dynamo for Revit)
+
+    - Copy `RechargeViewExtension.dll` located in <br/>
+    `\..\DynamoExtensions_Recharge2017\src\RechargeViewExtension\RechargeViewExtension\bin\Release` to </br>
+    `C:\Program Files\Dynamo\Dynamo Core\1.3` </br> or
+    `C:\Program Files\Dynamo\Dynamo Revit\1.3\Revit_2017` </br>
+    (Again The first location is for Dynamo Studio and the second if for Dynamo for Revit)
+
+    Depending on which version of Dynamo you are using you need to adjust the file directories accordingly. It is also very important that you are using the appropriate NuGet packages that correspond to the build you plan on deploying on.  For example, don't use the 1.2 NuGet if you are running 1.3.  And remember 2.0 is coming and there are API changes :)
+    
+    To be redundant, your files should now be located similarly to this... </br>
+    `C:\Program Files\Dynamo\Dynamo Core\1.3\viewExtensions\RechargeViewExtension_ViewExtensionDefinition`</br>
+    `C:\Program Files\Dynamo\Dynamo Core\1.3\RechargeViewExtension.dll`
+
+    Now it is finally time to launch Dynamo! Navigate to the `View` tab in the main menu and at the bottom you should see a new option to show our view extension.  Selecting this option should launch our `RechargeWindow`.  If you don't see this or are running into additional issue check out the debugging section below. </br>
+
+    ![LaunchExtension](../Images/LaunchExtension.JPG)
+
+    As you add and remove nodes to the workspace our new window should dynamically update with the node nicknames.
+
+    ![LaunchExtension](../Images/ViewExtensionSampleGif.gif)
 
 
 
