@@ -344,7 +344,7 @@ In this section we are going to revist 2 of the main files we previously setup w
 
     Now it is finally time to launch Dynamo! Navigate to the `View` tab in the main menu and at the bottom you should see a new option to show our view extension.  Selecting this option should launch our `RechargeWindow`.  If you don't see this or are running into additional issue check out the debugging section below. </br>
 
-    ![LaunchExtension](../Images/LaunchExtension.JPG)
+    ![LaunchExtension](../Images/LaunchExtension.jpg)
 
     As you add and remove nodes to the workspace our new window should dynamically update with the node nicknames.
 
