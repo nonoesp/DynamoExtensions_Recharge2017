@@ -12,6 +12,5 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
         <TextBlock HorizontalAlignment="Stretch" Text="{Binding SelectedNodesText}" FontFamily="Arial" Padding="10" FontWeight="Medium" FontSize="18" Background="#2d2d2d" Foreground="White" />
-        <cefSharp:ChromiumWebBrowser Grid.Row="0" Address="C:\Users\alfarok\Documents\DynamoExtensions_Recharge2017\src\RechargeViewExtension\RechargeViewExtension\Resources\index.html" />
     </Grid>
 </Window>

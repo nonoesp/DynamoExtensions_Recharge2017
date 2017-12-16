@@ -180,6 +180,11 @@
 
 				renderer.render( scene, camera );
 			}
+
+            // Test helper function for dynamically calling js updates from C#
+			function changeColor(geom) {
+			    geom.material.color.setHex(0xff0000);
+			}
 		</script>
 	</body>
 </html>
