@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #cccccc;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+
+				background-color: rgba(225,225,225,0);
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 0px; width: 100%;
+				padding: 5px;
+			}
+
+			a {
+
+				color: #0080ff;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="info"><a href="http://threejs.org" target="_blank"></a> </div>
+
+		<script src="assests/js/three.min.js"></script>
+		<script src="assests/js/OrbitControls.js"></script>
+
+		<script>
+
+			var container;
+
+			var camera, scene, renderer, controls;
+
+			var mesh;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.getElementById( 'container' );
+
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+
+				scene = new THREE.Scene();
+				scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+
+				let ambientLight = new THREE.AmbientLight(0x404040);
+				this.scene.add(ambientLight);
+
+				var directionalLight = new THREE.DirectionalLight( 0xffffff );
+				directionalLight.position.set( 1, 1, 1 ).normalize();
+				scene.add( directionalLight );
+
+				// Build Grid and Axis
+				var size = 100;
+				var step = 5;
+				
+				var gridHelper = new THREE.Geometry();
+				var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.4 } );
+
+				for ( var i = - size; i <= size; i += step ) {
+
+					gridHelper.vertices.push( new THREE.Vector3( - size, 0, i ) );
+					gridHelper.vertices.push( new THREE.Vector3(   size, 0, i ) );
+
+					gridHelper.vertices.push( new THREE.Vector3( i, 0, - size ) );
+					gridHelper.vertices.push( new THREE.Vector3( i, 0,   size ) );
+
+				}
+
+				var gridLines = new THREE.Line( gridHelper, lineMaterial, THREE.LinePieces );
+				scene.add( gridLines );
+
+				var axisHelper = new THREE.AxisHelper(100);
+				axisHelper.translateY(.05);
+				this.scene.add(axisHelper);
+				
+				var material = new THREE.MeshPhongMaterial( {
+					color: 0xbbbbbb, specular: 0x111111, shininess: 150,
+					side: THREE.DoubleSide
+				} );
+
+				var geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);//new THREE.SphereGeometry( 50, 32, 32 ); //new THREE.BoxGeometry( 50, 50, 50 );
+				
+				// TODO rest request this data
+			    // mock JSON data
+                /*
+				meshData = {   "mesh" : {
+						"vertices" : [25, 0, 25, -25, 0, 25, -25, 0, -25, 25, 0, -25],
+						"faceIndices" : [0, 1, 2, 2, 0, 3]
+					}
+				}
+
+
+				//meshData = readTextFile('C:\Users\alfarok\Documents\electron-threejs-example_alfarok');
+
+				var vertices = meshData.mesh.vertices;
+				var faces = meshData.mesh.faceIndices;
+
+				var geometry = new THREE.Geometry();
+				geometry.vertices = [];
+				geometry.faces = [];
+
+				for(var i = 0; i < vertices.length; i += 3) {
+					geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i+1], vertices[i+2]));
+				}
+
+				for(var i = 0; i < faces.length; i += 3) {
+					geometry.faces.push(new THREE.Face3(faces[i], faces[i+1], faces[i+2]));
+				}
+
+				geometry.computeFaceNormals();
+
+				// TODO dynamic vertex updates
+				//geometry.dynamic = true;
+				//geometry.vertices[ 0 ].set( x, y, z );
+				//geometry.verticesNeedUpdate = true;
+                */
+
+				mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+
+				//
+
+				controls = new THREE.OrbitControls( camera );
+				camera.position.set( 0, 20, 100 );
+				controls.update();
+
+				//
+
+				renderer = new THREE.WebGLRenderer( { antialias: false, alpha : true } );
+				renderer.setClearColor(0x000000, 0);
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				container.appendChild( renderer.domElement );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				controls.update();
+
+				render();
+			}
+
+			function render() {
+
+				var time = Date.now() * 0.001;
+
+				mesh.rotation.x +=  0.005;
+				mesh.rotation.y +=  0.005;
+
+				renderer.render( scene, camera );
+			}
+		</script>
+	</body>
+</html>

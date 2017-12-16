@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RechargeViewExtension"
+             xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
             Width="500" Height="100">
@@ -11,5 +12,6 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
         <TextBlock HorizontalAlignment="Stretch" Text="{Binding SelectedNodesText}" FontFamily="Arial" Padding="10" FontWeight="Medium" FontSize="18" Background="#2d2d2d" Foreground="White" />
+        <cefSharp:ChromiumWebBrowser Grid.Row="0" Address="C:\Users\alfarok\Documents\DynamoExtensions_Recharge2017\src\RechargeViewExtension\RechargeViewExtension\Resources\index.html" />
     </Grid>
 </Window>

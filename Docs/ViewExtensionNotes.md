@@ -16,7 +16,7 @@ DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExten
 - [Dynamo Package Manager](https://github.com/DynamoDS/Dynamo/tree/dec6240ded0c4369617775336b9af60c2aba4103/src/DynamoPackagesUI)
 - [Dynamo Notifications](https://github.com/DynamoDS/Dynamo/tree/master/src/Notifications) 
 - [Librarie.js](https://github.com/DynamoDS/Dynamo/tree/master/src/LibraryViewExtension)
-- [DynamoShape](https://github.com/LongNguyenP/DynaShape)
+- [DynaShape](https://github.com/LongNguyenP/DynaShape)
 
 ## Creating a ViewExtension Template Project
 
@@ -31,6 +31,8 @@ This first example walks through each step required to create a viewExtenion sim
     - `System.Windows`
     - `System.Windows.Controls`
     - `Dynamo.Wpf.Extension` (NuGet DynamoVisualProgramming.WpfUILibrary)
+
+    (NOTE: Make sure you grab the correct version of the NuGet packages, they should correspond to the version of Dynamo you are running)
 
 3) Extend the IViewExtension class </br>
     ```public class RechargeViewExtension : IViewExtension```

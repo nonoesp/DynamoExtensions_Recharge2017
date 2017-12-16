@@ -2,6 +2,7 @@
 using Dynamo.Core;
 using Dynamo.Extensions;
 using Dynamo.Graph.Nodes;
+using CefSharp;
 
 namespace RechargeViewExtension
 {
