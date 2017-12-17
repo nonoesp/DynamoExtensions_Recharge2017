@@ -26,7 +26,7 @@ namespace RechargeViewExtension
         public void Loaded(ViewLoadedParams p)
         {
             // Specify the text displayed on the menu item
-            rechargeMenuItem = new MenuItem { Header = "Lightweight-VP" };
+            rechargeMenuItem = new MenuItem { Header = "LiteVP" };
 
             // Define the behavior when menu item is clicked
             rechargeMenuItem.Click += (sender, args) =>
@@ -44,8 +44,8 @@ namespace RechargeViewExtension
                 };
 
                 // Set the window position
-                window.Left = window.Owner.Left + 400;
-                window.Top = window.Owner.Top + 200;
+                window.Left = window.Owner.Left + 800;
+                window.Top = window.Owner.Top + 800;
 
                 // Show a modeless window.
                 window.Show();
