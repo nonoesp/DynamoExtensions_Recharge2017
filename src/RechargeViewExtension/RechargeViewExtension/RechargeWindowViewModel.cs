@@ -14,8 +14,9 @@ namespace RechargeViewExtension
         private ReadyParams readyParams;
 
         // Display the number of nodes in the active workspace
-        public string SelectedNodesText => $"Active nodes:\n{getNodeTypes()}";
+        public string SelectedNodesText => $"Disabled";
 
+        /*
         public string getNodeTypes()
         {
             string output = "";
@@ -28,6 +29,7 @@ namespace RechargeViewExtension
 
             return output;
         }
+        */
 
         public RechargeWindowViewModel(ReadyParams p)
         {

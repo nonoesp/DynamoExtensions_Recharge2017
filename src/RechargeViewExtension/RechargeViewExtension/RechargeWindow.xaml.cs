@@ -37,6 +37,9 @@ namespace RechargeViewExtension
             {
                 JavascriptResponse response = await Browser.EvaluateScriptAsync(ScriptTextBox.Text);
             }
+
+            // TODO implement history viewer or active html viewer
+            ScriptTextBox.Clear();
         }
     }
 }
