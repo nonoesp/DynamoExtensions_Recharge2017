@@ -42,6 +42,8 @@
 
 			var camera, scene, renderer, controls;
 
+			var defaultMaterial;
+
 			var mesh;
 
 			init();
@@ -87,50 +89,18 @@
 				axisHelper.translateY(.05);
 				this.scene.add(axisHelper);
 				
-				var material = new THREE.MeshPhongMaterial( {
+				defaultMaterial = new THREE.MeshPhongMaterial( {
 					color: 0xbbbbbb, specular: 0x111111, shininess: 150,
 					side: THREE.DoubleSide
 				} );
 
-				var geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);//new THREE.SphereGeometry( 50, 32, 32 ); //new THREE.BoxGeometry( 50, 50, 50 );
-				
-				// TODO rest request this data
-			    // mock JSON data
-                /*
-				meshData = {   "mesh" : {
-						"vertices" : [25, 0, 25, -25, 0, 25, -25, 0, -25, 25, 0, -25],
-						"faceIndices" : [0, 1, 2, 2, 0, 3]
-					}
-				}
-
-
-				//meshData = readTextFile('C:\Users\alfarok\Documents\electron-threejs-example_alfarok');
-
-				var vertices = meshData.mesh.vertices;
-				var faces = meshData.mesh.faceIndices;
-
-				var geometry = new THREE.Geometry();
-				geometry.vertices = [];
-				geometry.faces = [];
-
-				for(var i = 0; i < vertices.length; i += 3) {
-					geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i+1], vertices[i+2]));
-				}
-
-				for(var i = 0; i < faces.length; i += 3) {
-					geometry.faces.push(new THREE.Face3(faces[i], faces[i+1], faces[i+2]));
-				}
-
-				geometry.computeFaceNormals();
+				//var geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
 
 				// TODO dynamic vertex updates
 				//geometry.dynamic = true;
 				//geometry.vertices[ 0 ].set( x, y, z );
 				//geometry.verticesNeedUpdate = true;
-                */
 
-				mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
 
 				//
 
@@ -175,15 +145,37 @@
 
 				var time = Date.now() * 0.001;
 
-				mesh.rotation.x +=  0.005;
-				mesh.rotation.y +=  0.005;
+				//mesh.rotation.x +=  0.005;
+				//mesh.rotation.y +=  0.005;
 
 				renderer.render( scene, camera );
 			}
 
-            // Test helper function for dynamically calling js updates from C#
-			function changeColor(geom) {
-			    geom.material.color.setHex(0xff0000);
+            // Helper function to build THREE mesh from json
+			function buildMeshFromJson(meshData) {
+
+			    var vertices = meshData.vertices;
+			    var faces = meshData.faceIndices;
+
+			    var geometry = new THREE.Geometry();
+			    geometry.vertices = [];
+			    geometry.faces = [];
+
+			    for (var i = 0; i < vertices.length; i += 3) {
+			        geometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
+			    }
+
+			    for (var i = 0; i < faces.length; i += 3) {
+			        geometry.faces.push(new THREE.Face3(faces[i], faces[i + 1], faces[i + 2]));
+			    }
+
+			    geometry.computeFaceNormals();
+
+			    mesh = new THREE.Mesh(geometry, defaultMaterial);
+
+			    mesh.name = meshData.name;
+
+			    scene.add(mesh);
 			}
 		</script>
 	</body>
