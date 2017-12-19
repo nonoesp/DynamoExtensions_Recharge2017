@@ -26,7 +26,7 @@ namespace RechargeViewExtension
         public void Loaded(ViewLoadedParams p)
         {
             // Specify the text displayed on the menu item
-            rechargeMenuItem = new MenuItem { Header = "LiteVP" };
+            rechargeMenuItem = new MenuItem { Header = "MinimalVP" };
 
             // Define the behavior when menu item is clicked
             rechargeMenuItem.Click += (sender, args) =>

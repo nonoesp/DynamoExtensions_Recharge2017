@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RechargeViewExtension", "RechargeViewExtension\RechargeViewExtension.csproj", "{E5511114-3BE5-4EC3-99CB-B9BDD0D37E3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteVP", "LiteVP\LiteVP.csproj", "{94012F9E-63CB-4005-93B1-E6572A44B7BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalVP", "LiteVP\MinimalVP.csproj", "{94012F9E-63CB-4005-93B1-E6572A44B7BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

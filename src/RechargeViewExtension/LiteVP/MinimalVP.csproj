@@ -7,8 +7,8 @@
     <ProjectGuid>{94012F9E-63CB-4005-93B1-E6572A44B7BA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LiteVP</RootNamespace>
-    <AssemblyName>LiteVP</AssemblyName>
+    <RootNamespace>MinimalVP</RootNamespace>
+    <AssemblyName>MinimalVP</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -118,7 +118,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LiteVP.cs" />
+    <Compile Include="MinimalVP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

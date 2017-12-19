@@ -7,11 +7,11 @@ using Dynamo;
 using Autodesk.DesignScript.Geometry;
 using Newtonsoft.Json.Linq;
 
-namespace LiteVP
+namespace MinimalVP
 {
-    public class LiteVP
+    public class MinimalVP
     {
-        public static string BuildMesh(string name, double[] vertices, int[] vertexIndicesbyTri)
+        public static string RenderMesh(string name, double[] vertices, int[] vertexIndicesbyTri)
         {
             // Build json object
             JObject meshObject = new JObject(
