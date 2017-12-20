@@ -48,18 +48,14 @@ namespace RechargeViewExtension
             // is required in order to access the workspaces
             readyParams = p;
 
-            // TODO this could be dangerous if called in custom node ws
-            var currentWS = p.CurrentWorkspaceModel as HomeWorkspaceModel;
-
-            currentWS.RefreshCompleted += CurrentWorkspaceModel_NodesChanged;
-
             // Subscribe to NodeAdded and NodeRemoved events
             p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodesChanged;
             p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodesChanged;
 
-            //currentWS.EvaluationCompleted += CurrentWorkspaceModel_NodesChanged;
+            // TODO this could be dangerous if called in custom node ws
+            var currentWS = p.CurrentWorkspaceModel as HomeWorkspaceModel;
+            currentWS.RefreshCompleted += CurrentWorkspaceModel_NodesChanged;
         }
-
 
         // Define what happens when the event above if triggered
         private void CurrentWorkspaceModel_NodesChanged(NodeModel obj)

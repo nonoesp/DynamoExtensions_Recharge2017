@@ -46,6 +46,8 @@
 
 			var mesh;
 
+			var rotation;
+
 			init();
 			animate();
 
@@ -119,7 +121,8 @@
 
 				//
 
-				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener('resize', onWindowResize, false);
+				document.addEventListener("keydown", onDocumentKeyDown, false);
 			}
 
 			function onWindowResize() {
@@ -145,8 +148,15 @@
 
 				var time = Date.now() * 0.001;
 
-				//mesh.rotation.x +=  0.005;
-				//mesh.rotation.y +=  0.005;
+				if (rotation == true) {
+				    mesh.rotation.x += 0.005;
+				    mesh.rotation.y += 0.005;
+				}
+
+				else {
+				    mesh.rotation.x = 0;
+				    mesh.rotation.y =  0;
+				}
 
 				renderer.render( scene, camera );
 			}
@@ -176,6 +186,35 @@
 			    mesh.name = meshData.name;
 
 			    scene.add(mesh);
+			}
+
+            // Hot keys
+			function onDocumentKeyDown(event) {
+			    var keyCode = event.which;
+			    // O = ortho
+			    if (keyCode == 79) {
+			        // set ortho cam
+			    }
+			        // P = perspective
+			    else if (keyCode == 80) {
+			        // set perspective cam
+			    }
+			        // W = wireframe active
+			    else if (keyCode == 83) {
+			        mesh.material.wireframe = false;
+			    }
+			        // S = shader active
+			    else if (keyCode == 87) {
+			        mesh.material.wireframe = true;
+			    }
+			        // 1 = Pink
+			    else if (keyCode == 49) {
+			        mesh.material.color.setHex(0x00ff00);
+			    }
+			        // 2 = Green
+			    else if (keyCode == 50) {
+			        mesh.material.color.setHex(0xff00ff);
+			    };
 			}
 		</script>
 	</body>
