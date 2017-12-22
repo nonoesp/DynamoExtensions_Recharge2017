@@ -46,7 +46,12 @@
 
 			var mesh;
 
-			var rotation;
+			var rotation = false;
+
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2(), INTERSECTED;
+
+			var colorHistory;
 
 			init();
 			animate();
@@ -104,7 +109,11 @@
 				// TODO dynamic vertex updates
 				//geometry.dynamic = true;
 				//geometry.vertices[ 0 ].set( x, y, z );
-				//geometry.verticesNeedUpdate = true;
+			    //geometry.verticesNeedUpdate = true;
+
+				//let localMesh = 
+
+				//renderDynamoMesh(localMesh);
 
 
 				//
@@ -125,6 +134,8 @@
 				//
 
 				window.addEventListener('resize', onWindowResize, false);
+				window.addEventListener('mousemove', onMouseMove, false);
+				window.requestAnimationFrame(render);
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 			}
 
@@ -155,13 +166,44 @@
 				    mesh.rotation.x += 0.005;
 				    mesh.rotation.y += 0.005;
 				}
-
+    
+                /*
 				else {
 				    mesh.rotation.x = 0;
 				    mesh.rotation.y =  0;
 				}
+                */
+
+			    // update the picking ray with the camera and mouse position
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.children);
+
+				if (intersects.length > 0) {
+				    if (INTERSECTED != intersects[0].object && intersects[0].object.isMesh == true) {
+				        console.log(intersects[0].object.geometry.faces);
+				        INTERSECTED = intersects[0].object;
+				        INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+				        //INTERSECTED.material.emissive.setHex(0xff0000);
+				        colorHistory = INTERSECTED.material.color.getHex();
+				        INTERSECTED.material.color.setHex(0xff0000);
+				    }
+				} else {
+				    if (INTERSECTED) INTERSECTED.material.color.setHex(colorHistory);
+				    INTERSECTED = null;
+				}
 
 				renderer.render( scene, camera );
+			}
+
+			function onMouseMove(event) {
+
+			    // calculate mouse position in normalized device coordinates
+			    // (-1 to +1) for both components
+
+			    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+			    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
 			}
 
             // Helper function to build THREE mesh from json
