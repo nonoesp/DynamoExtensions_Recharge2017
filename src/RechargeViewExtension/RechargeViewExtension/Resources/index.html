@@ -31,7 +31,7 @@
 	<body>
 
 		<div id="container"></div>
-		<div id="info">Dynamo Viewport</div>
+		<div id="info"></div>
 
 		<script src="assests/js/three.min.js"></script>
 		<script src="assests/js/OrbitControls.js"></script>
@@ -86,10 +86,9 @@
 				var pointLight = new THREE.PointLight(0xffffff, 1);
 				camera.add(pointLight);
 
-                // Default mesh material
-				defaultShadedMaterial = new THREE.MeshPhongMaterial({
-				    color: 0xbbbbbb, specular: 0x111111, shininess: 100,
-				    side: THREE.DoubleSide
+			    // Default mesh material
+				defaultShadedMaterial = new THREE.MeshLambertMaterial({
+				    color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
 				});
 
 			    // Default wireframe materal
@@ -121,13 +120,6 @@
 				var axisHelper = new THREE.AxisHelper(100);
 				axisHelper.translateY(.05);
 				scene.add(axisHelper);
-				
-				// TODO dynamic vertex updates
-				//geometry.dynamic = true;
-				//geometry.vertices[ 0 ].set( x, y, z );
-			    //geometry.verticesNeedUpdate = true;
-
-				//
 
 				controls = new THREE.OrbitControls( camera );
 				camera.position.set( 0, 20, 100 );
@@ -258,7 +250,10 @@
 			    for (var i = 0; i < faces.length; i += 3) {
 			        geometry.faces.push(new THREE.Face3(faces[i], faces[i + 1], faces[i + 2]));
 			    }
-
+    
+                // Required for smooth shading (why do we store dupe vertices for each tri???)
+			    //geometry.mergeVertices();
+			    //geometry.computeVertexNormals();
 			    geometry.computeFaceNormals();
 
 			    var currentMaterial = defaultShadedMaterial;

@@ -29,7 +29,10 @@ namespace RechargeViewExtension
             }
 
             InitializeComponent();
-    }
+
+            // Center initial viewport window upon launch
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+        }
 
         private async void ExecuteJavaScriptBtn_Click(object sender, RoutedEventArgs e)
         {

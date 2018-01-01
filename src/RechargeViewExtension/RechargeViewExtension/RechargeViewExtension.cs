@@ -43,10 +43,6 @@ namespace RechargeViewExtension
                     Owner = p.DynamoWindow
                 };
 
-                // Set the window position
-                window.Left = window.Owner.Left + 800;
-                window.Top = window.Owner.Top + 800;
-
                 // Show a modeless window.
                 window.Show();
             };

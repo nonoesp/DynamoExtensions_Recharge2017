@@ -72,21 +72,6 @@ namespace RechargeViewExtension
             // TODO this could be dangerous if called in custom node ws
             var currentWS = p.CurrentWorkspaceModel as HomeWorkspaceModel;
             //currentWS.RefreshCompleted += CurrentWorkspaceModel_NodesChanged;
-
-            /*
-            foreach (NodeModel node in currentWS.Nodes)
-            {
-                node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
-                if (node.Name == "Cuboid.ByLengths")
-                {
-                    node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
-                }
-                else if (node.Name == "Sphere.ByCenterPointRadius")
-                {
-                    node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
-                }
-            }
-            */
         }
 
         // When a new node is added to the workspace
