@@ -6,8 +6,8 @@
              xmlns:local="clr-namespace:RechargeViewExtension"
              xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-            Width="500" Height="500">
+             d:DesignHeight="500" d:DesignWidth="500"
+             Width="500" Height="500">
     <Grid Name="MainGrid" 
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
@@ -19,8 +19,8 @@
             <ColumnDefinition Width="9*"></ColumnDefinition>
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock HorizontalAlignment="Stretch" Text="MinimalVP" FontFamily="Arial" Padding="5" FontWeight="Medium" FontSize="11" Background="#2d2d2d" Foreground="White" Grid.ColumnSpan="2"/>
-        <TextBlock Name="ActiveMeshBox" FontSize="11" Padding="3" Grid.Row="0" Grid.Column="1" Background="#2d2d2d" Text="Active Meshes: " Foreground="White"/>
+        <TextBlock HorizontalAlignment="Stretch" Text="Viewport" FontFamily="Arial" Padding="5" FontWeight="Medium" FontSize="11" Background="#2d2d2d" Foreground="White" Grid.ColumnSpan="2"/>
+        <TextBlock Name="ActiveMeshBox" FontSize="11" Padding="3" Grid.Row="0" Grid.Column="1" Background="#2d2d2d" Text="Active Geometry: " Foreground="White"/>
         <cefSharp:ChromiumWebBrowser Name="Browser" Address="C:\Users\alfarok\Documents\DynamoExtensions_Recharge2017\src\RechargeViewExtension\RechargeViewExtension\Resources\index.html" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></cefSharp:ChromiumWebBrowser>
         <TextBox Name="ScriptTextBox" FontSize="11" Padding="3" Grid.Row="1" Grid.Column="0" Text="{Binding SelectedNodesText, Mode=OneWay}" TextChanged="ExecuteJavaScriptBtn_Click"/>
         <Button Name="ExecuteJavaScriptBtn" Grid.Row="1" Grid.Column="1" FontSize="11" Click="ExecuteJavaScriptBtn_Click">Execute</Button>

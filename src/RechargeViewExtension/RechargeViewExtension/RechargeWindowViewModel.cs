@@ -21,6 +21,8 @@ namespace RechargeViewExtension
         private ReadyParams readyParams;
 
         public RenderPackageCache packageContent;
+        public string transactionType = "";
+        public string nodeGuid = "";
 
         // Find render nodes and build THREE meshes
         public string SelectedNodesText => $"{getNodeTypes()}";
@@ -30,23 +32,7 @@ namespace RechargeViewExtension
             // TODO this is a hack to remove and add a new mesh each render
             // We should check for existing mesh by name and simply update verts/indices
             // Mesh must be set similar to 'geometry.verticesNeedUpdate = true;'
-            string output = "scene.remove(mesh);\n renderDynamoMesh(";
-
-            /*
-            foreach (NodeModel node in readyParams.CurrentWorkspaceModel.Nodes)
-            {
-                string nickName = node.Name;
-
-                
-                if(nickName == "MinimalVP.RenderMesh")
-                {
-                    // TODO - need to check if this is a list or not
-                    // in order to properly handle replication
-                    output += node.CachedValue.Data.ToString();
-                }
-                
-            }
-        */
+            string output = "renderDynamoMesh(";
 
             // TODO don't convert enums to lists
             List<double> verts = new List<double>();
@@ -61,18 +47,14 @@ namespace RechargeViewExtension
             }
 
             JObject meshObject = new JObject(
-                new JProperty("name", "newMesh"),
+                new JProperty("name", nodeGuid),
+                new JProperty("transactionType", transactionType), 
                 new JProperty("vertices", verts),
                 new JProperty("faceIndices", indices));
 
-            // How do I inject meshObject into view extension
             string jsonString = meshObject.ToString();
 
-            output += jsonString;
-
-            System.IO.File.WriteAllText(@"C:\Users\alfarok\Desktop\mesh.txt", jsonString);
-
-            output += ");";
+            output += jsonString + ");";
 
             return output;
         }
@@ -84,56 +66,70 @@ namespace RechargeViewExtension
             readyParams = p;
 
             // Subscribe to NodeAdded and NodeRemoved events
-            //p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodesChanged;
-            //p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodesChanged;
+            p.CurrentWorkspaceModel.NodeAdded += CurrentWorkspaceModel_NodeAdded;
+            p.CurrentWorkspaceModel.NodeRemoved += CurrentWorkspaceModel_NodeRemoved;
 
             // TODO this could be dangerous if called in custom node ws
             var currentWS = p.CurrentWorkspaceModel as HomeWorkspaceModel;
             //currentWS.RefreshCompleted += CurrentWorkspaceModel_NodesChanged;
 
+            /*
             foreach (NodeModel node in currentWS.Nodes)
             {
+                node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
                 if (node.Name == "Cuboid.ByLengths")
                 {
-                    node.RenderPackagesUpdated += CurrentWorkspaceModel_CuboidReady;
+                    node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
                 }
                 else if (node.Name == "Sphere.ByCenterPointRadius")
                 {
-                    node.RenderPackagesUpdated += CurrentWorkspaceModel_CuboidReady;
+                    node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
                 }
             }
+            */
         }
 
-        // Define what happens when the event above if triggered
-        private void CurrentWorkspaceModel_NodesChanged(NodeModel obj)
+        // When a new node is added to the workspace
+        private void CurrentWorkspaceModel_NodeAdded(NodeModel node)
         {
-            // Event used to notify UI or bound elements that
-            // the data has changed and needs to be updated
-            RaisePropertyChanged("SelectedNodesText");
+            // Update viewport when nodes render package is updated
+            node.RenderPackagesUpdated += CurrentWorkspaceModel_UpdateViewportGeometry;
+            //RaisePropertyChanged("SelectedNodesText");
         }
 
-        private void CurrentWorkspaceModel_NodesChanged(object sender, EventArgs e)
+        // When an existing node is removed from the workspace
+        private void CurrentWorkspaceModel_NodeRemoved(NodeModel node)
         {
-            // Event used to notify UI or bound elements that
-            // the data has changed and needs to be updated
+            // TODO before unregistering we must remove any geom related to this node
+            // Should inject this string somehow
+            // string guid = nodeModel.GUID.ToString();
+            // var output = "scene.getObjectByName({guid}); \nscene.remove(output);"
+            // Consider also removing from global string list?
+            nodeGuid = node.GUID.ToString();
+            transactionType = "remove";
+            // Unregister when node is removed
             RaisePropertyChanged("SelectedNodesText");
+            node.RenderPackagesUpdated -= CurrentWorkspaceModel_UpdateViewportGeometry;
         }
 
-        private void CurrentWorkspaceModel_CuboidReady(NodeModel nodeModel, RenderPackageCache packages)
+        private void CurrentWorkspaceModel_UpdateViewportGeometry(NodeModel nodeModel, RenderPackageCache packages)
         {
             packageContent = packages;
+            nodeGuid = nodeModel.GUID.ToString();
+            transactionType = "update";
             // Event used to notify UI or bound elements that
             // the data has changed and needs to be updated
-            RaisePropertyChanged("SelectedNodesText");
+            RaisePropertyChanged("SelectedNodesText"/*SelectedNodesText(nodeModel.GUID.ToString())*/);
         }
 
         // Very important - unsubscribe from our events to prevent a memory leak
         public void Dispose()
         {
-            /*
-            readyParams.CurrentWorkspaceModel.NodeAdded -= CurrentWorkspaceModel_NodesChanged;
-            readyParams.CurrentWorkspaceModel.NodeRemoved -= CurrentWorkspaceModel_NodesChanged;
+            
+            readyParams.CurrentWorkspaceModel.NodeAdded -= CurrentWorkspaceModel_NodeAdded;
+            readyParams.CurrentWorkspaceModel.NodeRemoved -= CurrentWorkspaceModel_NodeRemoved;
 
+            /*
             var currentWS = readyParams.CurrentWorkspaceModel as HomeWorkspaceModel;
             currentWS.RefreshCompleted -= CurrentWorkspaceModel_NodesChanged;
             */

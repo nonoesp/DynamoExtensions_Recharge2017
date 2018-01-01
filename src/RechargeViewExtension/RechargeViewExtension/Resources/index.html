@@ -31,25 +31,32 @@
 	<body>
 
 		<div id="container"></div>
-		<div id="info"><a href="http://threejs.org" target="_blank"></a> </div>
+		<div id="info">Dynamo Viewport</div>
 
 		<script src="assests/js/three.min.js"></script>
 		<script src="assests/js/OrbitControls.js"></script>
 
 		<script>
-            // TODO global abatement?
+            
 			var container;
 
 			var camera, scene, renderer, controls;
 
-			var defaultMaterial;
+			var pCam, oCam;
 
-			var mesh;
+			var defaultShadedMaterial;
+			var defaultWireFrameMaterial;
+
+			//var mesh;
+
+			var meshes = [];
+
+			var activeMeshes = [];
 
 			var rotation = false;
 
-			var raycaster = new THREE.Raycaster();
-			var mouse = new THREE.Vector2(), INTERSECTED;
+			//var raycaster = new THREE.Raycaster();
+			//var mouse = new THREE.Vector2(), INTERSECTED;
 
 			var colorHistory;
 
@@ -60,21 +67,37 @@
 
 				container = document.getElementById( 'container' );
 
-				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+				var aspect = window.innerWidth / window.innerHeight;
+				var frustumSize = 1000;
+				pCam = new THREE.PerspectiveCamera(45, aspect, 1, 10000);
+				oCam = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 2000);
+				camera = pCam;
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.Fog(0x050505, 2000, 3500);
+				//scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 				scene.add(camera);
 
 				let ambientLight = new THREE.AmbientLight(0x404040);
-				this.scene.add(ambientLight);
+				scene.add(ambientLight);
 
 				//var directionalLight = new THREE.DirectionalLight( 0xffffff );
 				//directionalLight.position.set( 1, 1, 1 ).normalize();
 			   
 				var pointLight = new THREE.PointLight(0xffffff, 1);
-				this.camera.add(pointLight);
+				camera.add(pointLight);
 
+                // Default mesh material
+				defaultShadedMaterial = new THREE.MeshPhongMaterial({
+				    color: 0xbbbbbb, specular: 0x111111, shininess: 100,
+				    side: THREE.DoubleSide
+				});
+
+			    // Default wireframe materal
+				defaultWireFrameMaterial = new THREE.MeshBasicMaterial({
+				    color: 0xbbbbbb, wireframe: true
+				});
+
+                // TODO break out into separate func
 				// Build Grid and Axis
 				var size = 100;
 				var step = 5;
@@ -97,24 +120,12 @@
 
 				var axisHelper = new THREE.AxisHelper(100);
 				axisHelper.translateY(.05);
-				this.scene.add(axisHelper);
+				scene.add(axisHelper);
 				
-				defaultMaterial = new THREE.MeshPhongMaterial( {
-					color: 0xbbbbbb, specular: 0x111111, shininess: 100,
-					side: THREE.DoubleSide
-				} );
-
-				//var geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-
 				// TODO dynamic vertex updates
 				//geometry.dynamic = true;
 				//geometry.vertices[ 0 ].set( x, y, z );
 			    //geometry.verticesNeedUpdate = true;
-
-				//let localMesh = 
-
-				//renderDynamoMesh(localMesh);
-
 
 				//
 
@@ -134,7 +145,7 @@
 				//
 
 				window.addEventListener('resize', onWindowResize, false);
-				window.addEventListener('mousemove', onMouseMove, false);
+				//window.addEventListener('mousemove', onMouseMove, false);
 				window.requestAnimationFrame(render);
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 			}
@@ -160,21 +171,17 @@
 
 			function render() {
 
-				var time = Date.now() * 0.001;
+				//var time = Date.now() * 0.001;
 
+                /*
 				if (rotation == true) {
 				    mesh.rotation.x += 0.005;
 				    mesh.rotation.y += 0.005;
 				}
-    
-                /*
-				else {
-				    mesh.rotation.x = 0;
-				    mesh.rotation.y =  0;
-				}
                 */
 
 			    // update the picking ray with the camera and mouse position
+                /*
 				raycaster.setFromCamera(mouse, camera);
 
 				var intersects = raycaster.intersectObjects(scene.children);
@@ -186,16 +193,18 @@
 				        INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
 				        //INTERSECTED.material.emissive.setHex(0xff0000);
 				        colorHistory = INTERSECTED.material.color.getHex();
-				        INTERSECTED.material.color.setHex(0xff0000);
+				        INTERSECTED.material.color.setHex(0x009eff);
 				    }
 				} else {
-				    if (INTERSECTED) INTERSECTED.material.color.setHex(colorHistory);
+				    if (INTERSECTED) INTERSECTED.material.color.setHex(0xbbbbbb);
 				    INTERSECTED = null;
 				}
+                */
 
 				renderer.render( scene, camera );
 			}
 
+            /*
 			function onMouseMove(event) {
 
 			    // calculate mouse position in normalized device coordinates
@@ -205,10 +214,36 @@
 			    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
 			}
+            */
 
             // Helper function to build THREE mesh from json
 			function renderDynamoMesh(meshData) {
 
+			    var name = meshData.name;
+			    var status = meshData.transactionType;
+
+			    if (status == "remove") {
+			        console.log("mesh remove");
+			        var guid = scene.getObjectByName(name);
+			        scene.remove(guid);
+			        activeMeshes.pop(name);
+			        return;
+			    }
+
+                // if mesh already exists remove it and redraw
+			    if (activeMeshes.indexOf(name) >= 0) {
+			        console.log("mesh updated");
+			        var guid = scene.getObjectByName(name);
+			        scene.remove(guid);
+			    }
+
+                // new mesh
+			    else {
+			        console.log("new mesh add");
+			        activeMeshes.push(name);
+			    }
+
+                // construct mesh from render package
 			    var vertices = meshData.vertices;
 			    var faces = meshData.faceIndices;
 
@@ -226,9 +261,16 @@
 
 			    geometry.computeFaceNormals();
 
-			    mesh = new THREE.Mesh(geometry, defaultMaterial);
+			    var currentMaterial = defaultShadedMaterial;
+			    if (meshes[0]) {
+			        currentMaterial = meshes[0].material;
+			    }
+
+			    var mesh = new THREE.Mesh(geometry, currentMaterial);
 
 			    mesh.name = meshData.name;
+
+			    meshes.push(mesh);
 
 			    scene.add(mesh);
 			}
@@ -239,18 +281,26 @@
 			    // O = ortho
 			    if (keyCode == 79) {
 			        // set ortho cam
+			        oCam.position.set(pCam.position);
+			        camera = oCam;
 			    }
 			        // P = perspective
 			    else if (keyCode == 80) {
 			        // set perspective cam
-			    }
-			        // W = wireframe active
-			    else if (keyCode == 83) {
-			        mesh.material.wireframe = false;
+			        pCam.position.set(oCam.position);
+			        camera = pCam;
 			    }
 			        // S = shader active
+			    else if (keyCode == 83) {
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].material = defaultShadedMaterial
+			        }
+			    }
+			        // W = wireframe active
 			    else if (keyCode == 87) {
-			        mesh.material.wireframe = true;
+			        for (var i = 0; i < meshes.length; i++) {
+                        meshes[i].material = defaultWireFrameMaterial
+			        }
 			    }
 			        // 1 = Pink
 			    else if (keyCode == 49) {
