@@ -55,8 +55,8 @@
 
 			var rotation = false;
 
-			//var raycaster = new THREE.Raycaster();
-			//var mouse = new THREE.Vector2(), INTERSECTED;
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2(), INTERSECTED;
 
 			var colorHistory;
 
@@ -90,6 +90,8 @@
 				defaultShadedMaterial = new THREE.MeshLambertMaterial({
 				    color: 0xbbbbbb, specular: 0x111111, shininess: 100, side: THREE.DoubleSide
 				});
+
+				defaultShadedMaterial.flatShading = false;
 
 			    // Default wireframe materal
 				defaultWireFrameMaterial = new THREE.MeshBasicMaterial({
@@ -137,7 +139,7 @@
 				//
 
 				window.addEventListener('resize', onWindowResize, false);
-				//window.addEventListener('mousemove', onMouseMove, false);
+				window.addEventListener('mousemove', onMouseMove, false);
 				window.requestAnimationFrame(render);
 				document.addEventListener("keydown", onDocumentKeyDown, false);
 			}
@@ -165,15 +167,12 @@
 
 				//var time = Date.now() * 0.001;
 
-                /*
 				if (rotation == true) {
 				    mesh.rotation.x += 0.005;
 				    mesh.rotation.y += 0.005;
 				}
-                */
 
 			    // update the picking ray with the camera and mouse position
-                /*
 				raycaster.setFromCamera(mouse, camera);
 
 				var intersects = raycaster.intersectObjects(scene.children);
@@ -191,12 +190,10 @@
 				    if (INTERSECTED) INTERSECTED.material.color.setHex(0xbbbbbb);
 				    INTERSECTED = null;
 				}
-                */
 
 				renderer.render( scene, camera );
 			}
 
-            /*
 			function onMouseMove(event) {
 
 			    // calculate mouse position in normalized device coordinates
@@ -206,7 +203,6 @@
 			    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
 			}
-            */
 
             // Helper function to build THREE mesh from json
 			function renderDynamoMesh(meshData) {
@@ -220,6 +216,17 @@
 			        scene.remove(guid);
 			        activeMeshes.pop(name);
 			        return;
+			    }
+			    else if (status == "togglePreview") {
+			        console.log("hide/show event");
+			        var guid = scene.getObjectByName(name);
+			        if (meshData.displayPreview == true) {
+			            guid.visible = true;
+			        }
+			        else {
+			            guid.visible = false;
+			        }
+
 			    }
 
                 // if mesh already exists remove it and redraw
@@ -267,7 +274,13 @@
 
 			    meshes.push(mesh);
 
-			    scene.add(mesh);
+			    
+
+			    if (meshData.displayPreview == true) {
+			        //var meshObject = scene.getObjectByName(name);
+			        //meshObject.visible = false;
+			        scene.add(mesh);
+			    }
 			}
 
             // Hot keys
