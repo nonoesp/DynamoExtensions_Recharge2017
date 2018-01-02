@@ -167,10 +167,12 @@
 
 				//var time = Date.now() * 0.001;
 
-				if (rotation == true) {
-				    mesh.rotation.x += 0.005;
-				    mesh.rotation.y += 0.005;
-				}
+			    if (rotation == true) {
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].rotation.x += 0.005;
+			            meshes[i].rotation.y += 0.005;
+			        }
+			    }
 
 			    // update the picking ray with the camera and mouse position
 				raycaster.setFromCamera(mouse, camera);
@@ -239,6 +241,7 @@
                 // new mesh
 			    else {
 			        console.log("new mesh add");
+			        console.log(name);
 			        activeMeshes.push(name);
 			    }
 
@@ -274,8 +277,6 @@
 
 			    meshes.push(mesh);
 
-			    
-
 			    if (meshData.displayPreview == true) {
 			        //var meshObject = scene.getObjectByName(name);
 			        //meshObject.visible = false;
@@ -310,14 +311,29 @@
                         meshes[i].material = defaultWireFrameMaterial
 			        }
 			    }
+			        // R = toggle rotation
+			    else if (keyCode == 82) {
+			        if (rotation == false)
+			        {
+			            rotation = true;
+			        }
+			        else if (rotation == true)
+			        {
+			            rotation = false;
+			        }
+			    }
 			        // 1 = Pink
 			    else if (keyCode == 49) {
-			        mesh.material.color.setHex(0x00ff00);
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].material.color.setHex(0x00ff00);
+			        }
 			    }
 			        // 2 = Green
 			    else if (keyCode == 50) {
-			        mesh.material.color.setHex(0xff00ff);
-			    };
+			        for (var i = 0; i < meshes.length; i++) {
+			            meshes[i].material.color.setHex(0xff00ff);
+			        }
+			    }
 			}
 		</script>
 	</body>
