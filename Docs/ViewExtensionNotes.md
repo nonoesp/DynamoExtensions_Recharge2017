@@ -5,10 +5,12 @@
 ## Background/Existing Resources
 
 ### What is the View Extension framework?
-The View Extension framework for Dynamo allows you to extend the Dynamo UI by registering custom MenuItems. A ViewExtension has two components, an assembly containing a class that implements `IViewExtension`, and an `ViewExtensionDefintion` xml file used to instruct Dynamo where to find the class containing the `IViewExtension` implementation. The `ViewExtensionDefinition` xml file must be located in your `dynamo\viewExtensions` folder.
+The View Extension framework for Dynamo allows you to extend the Dynamo UI by registering custom MenuItems. A ViewExtension has two components, an assembly containing a class that implements `IViewExtension`, and an `ViewExtensionDefintion` XML file used to instruct Dynamo where to find the class containing the `IViewExtension` implementation.
+
+It used to be required to locate the `ViewExtensionDefinition` XML file inside the `viewExtensions` folder of your Dynamo installation (for instance, `Dynamo\Dynamo Core\2\viewExtensions` for Dynamo 2.0, inside Program Files). Since Dynamo 2.0, View Extensions can be distributed in the package manager as any other package. The folder structure is also similar to that of a package, and you just have to point to your DLL file inside the `bin/` directory of your extension from the XML file.
 
 ### Dynamo Samples
-DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExtension` implementation which shows a modeless window when its `MenuItem` is clicked. The Window created tracks the number of nodes in the current workspace, by handling the workspace's `NodeAdded` and `NodeRemoved` events.
+DynamoSamples contains a viewExtension sample that demonstrates an `IViewExtension` implementation which shows a modeless window when its `MenuItem` is clicked. The Window created tracks the number of nodes in the current workspace, by handling the workspace's `NodeAdded` and `NodeRemoved` events.
 
 ### Other Examples
 
@@ -20,7 +22,7 @@ DynamoSampples contains a viewExtentsion sample that demonstrates an `IViewExten
 
 ## Creating a ViewExtension Template Project
 
-This first example walks through each step required to create a viewExtenion similar to the one in DynamoSamples just to get more familiar with the various requirements.  The end goal is to have a simple pop-up window activated from the Dynamo menu toolbar that displays some information about the active graph.
+This first example walks through each step required to create a viewExtension similar to the one in DynamoSamples just to get more familiar with the various requirements.  The end goal is to have a simple pop-up window activated from the Dynamo menu toolbar that displays some information about the active graph.
 
 1) Create a new Visual Studio Class Library project </br>
 
@@ -32,7 +34,7 @@ This first example walks through each step required to create a viewExtenion sim
     - `System.Windows.Controls`
     - `Dynamo.Wpf.Extension` (NuGet DynamoVisualProgramming.WpfUILibrary)
 
-3) Extend the IViewExtension class </br>
+3) Create a new class named RechargeViewExtension and, inside the `RechargeViewExtension.cs` file, extend the IViewExtension class </br>
     ```public class RechargeViewExtension : IViewExtension```
 
 4) `IViewExtension` required implementations that must be included
